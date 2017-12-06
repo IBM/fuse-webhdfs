@@ -100,7 +100,7 @@ class WebHDFS(LoggingMixIn, Operations):
 
     def mkdir(self, path, mode):
         logger.info("mkdir %s", path)
-        return self.client.make_dir(path, permission=mode)
+        return self.client.make_dir(path, permission=oct(mode & 0o777).replace('0o', '0'))
 
     def create(self, path, mode):
         logger.info("Create %s", path)
@@ -134,9 +134,9 @@ class WebHDFS(LoggingMixIn, Operations):
     def destroy(self, path):
         pass
 
-    """
     def chmod(self, path, mode):
-        return self.client.chmod(path, mode)
+        return self.client.chmod(path, oct(mode & 0o1777).replace('0o', '0'))
+    """
 
     def chown(self, path, uid, gid):
         return self.client.chown(path, uid, gid)
