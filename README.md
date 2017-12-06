@@ -18,22 +18,10 @@ In one terminal type:
 mkdir -p ~/fuse-webhdfs
 python3 mount-webhdfs.py ~/fuse-webhdfs
 ```
-You will have to type in your username and password.
-To avoid having to type it every time, you have two options:
+You now have to type in your HDFS endpoint parameters and HDFS (Knox) username and password.
+These parameters will be saved in plain text in `$HOME/.config/webhdfs.ini`.
+If you have a problem with that, please create a pull request and I will be happy to consider merging it.
 
-1) add an entry in the $HOME/.netrc file:
-```
-machine webhdfs.fully.qualified.domain.name.ibm.com login <username> password <password>
-```
-or
-
-2) set the following environment variables beforehand:
-
-```
-export HDFS_USERNAME=<your username>
-export HDFS_PASSWORD=<your password>
-```
-If you have both the .netrc file and the environment variables, then environment variables will override the .netrc settings.
 
 After mounting, in other terminal(s) you will be able to list files, read them, etc.
 For example:
