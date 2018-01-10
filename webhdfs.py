@@ -13,6 +13,8 @@ import configparser
 
 cfg = configparser.ConfigParser()
 def write_default_config():
+    if not os.path.exists(os.environ['HOME'] + '/.config'):
+        os.makedirs(os.environ['HOME'] + '/.config')
     webhdfs_host = input("WebHDFS hostname (without https): ")
     cfg.set('DEFAULT', 'HDFS_HOST', webhdfs_host)
     webhdfs_baseurl_default = "https://{}:8443/gateway/default/webhdfs/v1/".format(webhdfs_host)
