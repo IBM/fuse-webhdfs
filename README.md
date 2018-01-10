@@ -6,6 +6,16 @@ After this, you can access the WebHDFS file system as if was a local directory -
 
 # Installation
 
+First dependency is fuse, you can install it on Ubuntu with:
+```
+sudo apt-get install fuse
+```
+
+or on RedHat with:
+```
+sudo yum install fuse
+```
+
 ```
 pip3 install -r requirements.txt
 ```
