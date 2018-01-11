@@ -39,12 +39,12 @@ def get_auth():
     username = password = None
     try:
         username, account, password = netrc().authenticators(cfg['DEFAULT']['HDFS_HOST'])
-        if not username:
-            username = cfg['DEFAULT'].get('HDFS_USERNAME', "")
-        if not password:
-            password = cfg['DEFAULT'].get('HDFS_PASSWORD', "")
     except NetrcParseError:
         pass
+    if not username:
+        username = cfg['DEFAULT'].get('HDFS_USERNAME', "")
+    if not password:
+        password = cfg['DEFAULT'].get('HDFS_PASSWORD', "")
     if 'HDFS_USERNAME' in os.environ:
         username = os.environ['HDFS_USERNAME']
     else:
