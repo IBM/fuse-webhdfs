@@ -29,6 +29,8 @@ curl -L https://daymvs1.pok.ibm.com/ibmca/downloadCarootCert.do\?file\=carootcer
 curl -L https://daymvs1.pok.ibm.com/ibmca/downloadCarootCert.do\?file\=caintermediatecert.der | openssl x509 -inform DER -outform PEM >> ibm-chain.crt
 ```
 
+And in the following configuration step please provide 'ibm-chain.crt' as the HDFS web server certificate path.
+
 # Usage
 
 In one terminal type:
