@@ -39,7 +39,7 @@ def get_auth():
     username = password = None
     try:
         username, account, password = netrc().authenticators(cfg['DEFAULT']['HDFS_HOST'])
-    except NetrcParseError:
+    except (NetrcParseError, TypeError):
         pass
     if not username:
         username = cfg['DEFAULT'].get('HDFS_USERNAME', "")
