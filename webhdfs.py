@@ -17,7 +17,7 @@ def write_default_config():
         os.makedirs(os.environ['HOME'] + '/.config')
     webhdfs_host = input("WebHDFS hostname (without https): ")
     cfg.set('DEFAULT', 'HDFS_HOST', webhdfs_host)
-    webhdfs_baseurl_default = "https://{}:8443/gateway/default/webhdfs/v1/".format(webhdfs_host)
+    webhdfs_baseurl_default = "https://{}:8443/gateway/webhdfs/webhdfs/v1/".format(webhdfs_host)
     webhdfs_baseurl = input("HDFS base URL [{}]: ".format(webhdfs_baseurl_default)) or webhdfs_baseurl_default
     cfg.set('DEFAULT', 'HDFS_BASEURL', webhdfs_baseurl)
     if webhdfs_baseurl.lower().startswith('https'):
