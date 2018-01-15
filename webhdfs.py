@@ -55,7 +55,7 @@ def get_auth():
     else:
         if not password:
             password = getpass.getpass(prompt="HDFS Password: ")
-    return (username, password)
+    return (username.lower(), password)
 
 def owner_to_uid(owner):
     try:
