@@ -64,10 +64,12 @@ def owner_to_uid(owner):
         return pwd.getpwnam('nobody')[2] or 0
 
 def group_to_gid(group):
-    try:
-        return grp.getgrnam(group)[2]
-    except KeyError:
-        return grp.getgrnam('nogroup')[2] or grp.getgrnam('nobody')[2] or 0
+    for g in [group, 'nogroup', 'nobody']:
+        try:
+            return grp.getgrnam(g)[2]
+        except KeyError:
+            pass
+    return 0
 
 def webhdfs_connect():
     webhdfs = PyWebHdfsClient(base_uri_pattern=cfg['DEFAULT']['HDFS_BASEURL'],
