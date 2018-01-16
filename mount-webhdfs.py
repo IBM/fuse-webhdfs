@@ -171,4 +171,4 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     print("Mounting {} at {}".format(webhdfs.cfg['DEFAULT']['HDFS_BASEURL'], sys.argv[1]))
-    fuse = FUSE(operations=WebHDFS(), mountpoint=sys.argv[1], foreground=True, nothreads=True)
+    fuse = FUSE(operations=WebHDFS(), mountpoint=sys.argv[1], foreground=True, nothreads=True, big_writes=True, max_read=1024*1024, max_write=1024*1024)
