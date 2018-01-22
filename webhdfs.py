@@ -57,18 +57,29 @@ def get_auth():
             password = getpass.getpass(prompt="HDFS Password: ")
     return (username.lower(), password)
 
+uid_cache = dict()
 def owner_to_uid(owner):
+    if owner in uid_cache:
+        return uid_cache[owner]
     try:
+        uid_cache[owner] = pwd.getpwnam(owner)[2]
         return pwd.getpwnam(owner)[2]
     except KeyError:
-        return pwd.getpwnam('nobody')[2] or 0
+        res = pwd.getpwnam('nobody')[2] or 0
+        uid_cache[owner] = res
+        return res
 
+gid_cache = dict()
 def group_to_gid(group):
+    if group in gid_cache:
+        return gid_cache[group]
     for g in [group, 'nogroup', 'nobody']:
         try:
+            gid_cache[group] = grp.getgrnam(g)[2]
             return grp.getgrnam(g)[2]
         except KeyError:
             pass
+    gid_cache[group] = 0
     return 0
 
 def webhdfs_connect():
