@@ -17,6 +17,7 @@ import webhdfs
 
 logger = logging.getLogger('Webhdfs')
 CACHE_MAX_SECONDS = 30
+mountpoint = ""
 
 class WebHDFS(LoggingMixIn, Operations):
     """
@@ -101,11 +102,14 @@ class WebHDFS(LoggingMixIn, Operations):
 
     def mkdir(self, path, mode):
         logger.info("mkdir %s", path)
-        return self.client.make_dir(path, permission=oct(mode & 0o777).replace('0o', ''))
+        self.client.make_dir(path, permission=oct(mode & 0o777).replace('0o', ''))
+        self._flush_file_info(path)
+        return 0
 
-    def create(self, path, mode):
-        logger.info("Create %s", path)
-        self.client.create_file(path, file_data=None, overwrite=True, permission=755)
+    def create(self, path, mode=int('755', 8)):
+        perm = oct(int(mode) & 0o777).replace('0o', '')
+        logger.info("Create %s perm %s", path, perm)
+        self.client.create_file(path, file_data=None, overwrite=True, permission=perm)
         self._flush_file_info(path)
         return 0
 
@@ -131,17 +135,48 @@ class WebHDFS(LoggingMixIn, Operations):
         logger.info("Unlink %s", path)
         self.client.delete_file_dir(path)
         self._flush_file_info(path)
+        return 0
 
     def destroy(self, path):
-        pass
+        return 0
 
     def chmod(self, path, mode):
-        return self.client.set_permission(path, oct(mode & 0o777).replace('0o', ''))
+        """
+        We ignore permission changing requests for now
+        """
+        return 0
+        # perm = oct(mode & 0o777).replace('0o', '')
+        # logger.info("chmod perm: %s", perm)
+        # return self.client.set_permission(path, perm)
 
     def rmdir(self, path):
         logger.info("rmdir %s", path)
         self.client.delete_file_dir(path)
         self._flush_file_info(path)
+        return 0
+
+    def chown(self, path, uid, gid):
+        """
+        We silently ignore the requests to change the owner
+        The provent the user from facing because the user on the local machine
+        and the user on the remote machine most likely differ, and we don't
+        want the user on the local machine to not be able to access the data
+        he/she uploads
+        """
+        logger.info("chown ignored for path %s uid %s gid %s", path, uid, gid)
+        return 0
+
+    def rename(self, old, new):
+        hdfs_path_old = old # [len(mountpoint):]
+        hdfs_path_new = os.path.join(os.path.dirname(hdfs_path_old), new)
+        logger.info("Rename '%s' --> '%s'", hdfs_path_old, hdfs_path_new)
+        res = self.client.rename_file_dir(hdfs_path_old, hdfs_path_new)
+        if res.get('boolean', None):
+            logger.info("Rename success")
+            self._flush_file_info(old)
+            self._flush_file_info(new)
+            return 0
+        raise FuseOSError(ENOSPC)
 
     """
     def chown(self, path, uid, gid):
@@ -149,9 +184,6 @@ class WebHDFS(LoggingMixIn, Operations):
         
     def readlink(self, path):
         return self.client.readlink(path)
-
-    def rename(self, old, new):
-        return self.client.rename(old, self.root + new)
 
     def symlink(self, target, source):
         return self.client.symlink(source, target)
@@ -174,4 +206,5 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     print("Mounting {} at {}".format(webhdfs.cfg['DEFAULT']['HDFS_BASEURL'], sys.argv[1]))
+    mountpoint = sys.argv[1]
     fuse = FUSE(operations=WebHDFS(), mountpoint=sys.argv[1], foreground=True, nothreads=True, big_writes=True, max_read=1024*1024, max_write=1024*1024)
