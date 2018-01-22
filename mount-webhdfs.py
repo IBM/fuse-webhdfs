@@ -138,6 +138,11 @@ class WebHDFS(LoggingMixIn, Operations):
     def chmod(self, path, mode):
         return self.client.set_permission(path, oct(mode & 0o777).replace('0o', ''))
 
+    def rmdir(self, path):
+        logger.info("rmdir %s", path)
+        self.client.delete_file_dir(path)
+        self._flush_file_info(path)
+
     """
     def chown(self, path, uid, gid):
         return self.client.chown(path, uid, gid)
@@ -147,9 +152,6 @@ class WebHDFS(LoggingMixIn, Operations):
 
     def rename(self, old, new):
         return self.client.rename(old, self.root + new)
-
-    def rmdir(self, path):
-        return self.client.rmdir(path)
 
     def symlink(self, target, source):
         return self.client.symlink(source, target)
