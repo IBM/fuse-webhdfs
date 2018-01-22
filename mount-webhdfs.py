@@ -4,7 +4,6 @@ from __future__ import print_function, absolute_import, division
 import os
 import sys
 import logging
-import pywebhdfs
 from datetime import datetime
 from errno import ENOENT, ENOSPC
 from stat import S_IFDIR, S_IFLNK, S_IFREG
@@ -12,6 +11,8 @@ from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.SecurityWarning)
 
+sys.path.insert(0, ".")
+import pywebhdfs
 import webhdfs
 
 logger = logging.getLogger('Webhdfs')
@@ -135,7 +136,7 @@ class WebHDFS(LoggingMixIn, Operations):
         pass
 
     def chmod(self, path, mode):
-        return self.client.chmod(path, oct(mode & 0o1777).replace('0o', '0'))
+        return self.client.set_permission(path, oct(mode & 0o1777).replace('0o', '0'))
     """
 
     def chown(self, path, uid, gid):
