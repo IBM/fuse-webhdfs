@@ -19,10 +19,9 @@ try:
     long_description = pypandoc.convert('README.md', 'rst')
 except(IOError, ImportError):
     long_description = open('README.md').read()
-    
 
 with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
-    version = f.read()
+    version = f.read().strip()
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.

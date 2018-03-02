@@ -24,18 +24,17 @@ pip3 install fuse-webhdfs
 
 and this install fuse-webhdfs with all its dependencies
 
-## Preparing IBM internal certificates
+## IBM CEDP users
 
-If you're running on IBM network, you'll need IBM internal certificate chain. You can run the following commands to prepare this chain:
+Please run the following script in the contrib directory:
 
 ```
-curl -L https://daymvs1.pok.ibm.com/ibmca/downloadCarootCert.do\?file\=carootcert.der | openssl x509 -inform DER -outform PEM > ibm-chain.crt
-curl -L https://daymvs1.pok.ibm.com/ibmca/downloadCarootCert.do\?file\=caintermediatecert.der | openssl x509 -inform DER -outform PEM >> ibm-chain.crt
+contrib/ibm-cedp-setup
 ```
 
-And in the following configuration step please provide 'ibm-chain.crt' as the HDFS web server certificate path.
+and provide your w3 SSO credentials
 
-# Usage
+# General Usage
 
 In one terminal type:
 
@@ -44,10 +43,9 @@ mkdir -p ~/fuse-webhdfs
 python3 mount-webhdfs.py ~/fuse-webhdfs
 ```
 You now have to type in your HDFS endpoint parameters and HDFS (Knox) username and password.
-For IBM internal use, please provide your w3id username and password.
 
 These parameters will be saved in plain text in `$HOME/.config/webhdfs.ini`.
-If you have a problem with that, please create a pull request and I will be happy to consider merging it.
+If this is an issue for you, please create a pull request and I will be happy to consider merging it.
 
 
 After mounting, in other terminal(s) you will be able to list files, read them, etc.

@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+mkdir -p $HOME/.config
+
+test -r $HOME/.config/ibm-chain.crt || {
+  curl -L https://daymvs1.pok.ibm.com/ibmca/downloadCarootCert.do\?file\=carootcert.der | openssl x509 -inform DER -outform PEM > $HOME/.config/ibm-chain.crt
+  curl -L https://daymvs1.pok.ibm.com/ibmca/downloadCarootCert.do\?file\=caintermediatecert.der | openssl x509 -inform DER -outform PEM >> $HOME/.config/ibm-chain.crt
+}
+
+
+function validate_email_address() {
+    IFS_PREV=$IFS
+    IFS="@"
+    set -- $1
+    IFS=$IFS_PREV
+    if [ "${#@}" -ne 2 ];then
+        echo "Invalid email address"
+        return 1
+    fi
+    dig soa $2 | grep -q "^$2" 1>/dev/null && return 0
+    echo "Invalid email address"
+    return 1
+}
+
+
+USERNAME=$1
+while true; do
+    validate_email_address "$USERNAME" && break
+    read -p "Please enter your w3id username (email address): " USERNAME
+done
+
+PASSWORD=$2
+if [[ -z "$PASSWORD" ]]; then
+    read -s -p "Password: " PASSWORD
+fi
+
+cat >$HOME/.config/webhdfs.ini <<_EOF
+[DEFAULT]
+hdfs_host = c13n5.i.zc2.ibm.com
+hdfs_baseurl = https://c13n5.i.zc2.ibm.com:8443/gateway/webhdfs/webhdfs/v1/
+hdfs_cert = $HOME/.config/ibm-chain.crt
+hdfs_username = $USERNAME
+hdfs_password = $PASSWORD
+_EOF
