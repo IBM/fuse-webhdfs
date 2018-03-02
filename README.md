@@ -22,7 +22,7 @@ after that, you can simply run:
 pip3 install fuse_webhdfs
 ```
 
-and this should pull in all dependencies
+and this install fuse_webhdfs with all its dependencies
 
 ## Preparing IBM internal certificates
 
