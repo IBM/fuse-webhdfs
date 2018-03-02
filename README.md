@@ -29,7 +29,7 @@ and this install fuse-webhdfs with all its dependencies
 Please run the following script in the contrib directory:
 
 ```
-contrib/ibm-cedp-setup
+contrib/ibm-cedp-webhdfs-setup
 ```
 
 and provide your w3 SSO credentials
@@ -44,7 +44,7 @@ python3 mount-webhdfs.py ~/fuse-webhdfs
 ```
 You now have to type in your HDFS endpoint parameters and HDFS (Knox) username and password.
 
-These parameters will be saved in plain text in `$HOME/.config/webhdfs.ini`.
+All parameters (including your password) will be saved in plain text in `$HOME/.config/webhdfs.ini`.
 If this is an issue for you, please create a pull request and I will be happy to consider merging it.
 
 
