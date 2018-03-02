@@ -19,10 +19,10 @@ sudo yum install fuse
 after that, you can simply run:
 
 ```
-pip3 install fuse_webhdfs
+pip3 install fuse-webhdfs
 ```
 
-and this install fuse_webhdfs with all its dependencies
+and this install fuse-webhdfs with all its dependencies
 
 ## Preparing IBM internal certificates
 
