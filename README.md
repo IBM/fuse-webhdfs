@@ -26,7 +26,7 @@ and this install fuse-webhdfs with all its dependencies
 
 ## IBM CEDP users
 
-Please run the following script in the contrib directory:
+Please run the following script from the contrib directory:
 
 ```
 contrib/ibm-cedp-webhdfs-setup
