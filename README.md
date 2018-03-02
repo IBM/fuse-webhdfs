@@ -16,9 +16,13 @@ or on RedHat with:
 sudo yum install fuse
 ```
 
+after that, you can simply run:
+
 ```
-pip3 install -r requirements.txt
+pip3 install fuse_webhdfs
 ```
+
+and this should pull in all dependencies
 
 ## Preparing IBM internal certificates
 
